@@ -3,10 +3,11 @@
 *.swo
 
 env/*
+.venv/*
 
 *__pycache__*
-*ipynb_checkpoints/*
 *mypy_cache*
+.ipynb_checkpoints
 
 code/.ipython/*
 code/.jupyter/*
@@ -18,5 +19,8 @@ code/tags
 code/crypto_intro/.mypy_cache/*
 code/crypto_intro/.ipynb_checkpoints/*
 code/recursion/exponentiation/__pycache__/*
-code/solutions/*
 code/misc/*
+code/complexities/.mypy_cache/*
+code/complexities/.ipynb_checkpoints/*
+
+code/graphs/clique/archive/*
