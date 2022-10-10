@@ -7,8 +7,8 @@ import matplotlib.pyplot as pyplot
 """
 Constants for Graph generation
 """
-nodes : int = 120
-probability_of_edge : float = 0.04
+nodes : int = 10
+probability_of_edge : float = 0.4
 
 def generate_graphs(amount_of_graphs : int = 1) -> None:
     """
@@ -74,7 +74,7 @@ matched_nodes_colors = ["#34eb64",
                         "#eb34d6"]
 
 
-def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: str, matching_iteration: str = "final") -> None:
+def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: str, matching_algorithm: str) -> None:
     edge_colors = list()
     for edge in graph.edges:
         if edge in matching:
@@ -83,8 +83,8 @@ def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: st
             edge_colors.append(unmatched_edge_color)
 
         
-    graph_name = f"images/{graph_name}_{matching_iteration}.pdf"
-    graph_title = f"Matching size: {len(matching)}\nAlgo step: {matching_iteration}"
+    graph_name = f"images/{graph_name}_{matching_algorithm}.pdf"
+    graph_title = f"Matching size: {len(matching)}\nAlgo step: {matching_algorithm}"
 
     pyplot.title(graph_title, fontsize=9)
     pos=networkx.spring_layout(graph, seed=1)
