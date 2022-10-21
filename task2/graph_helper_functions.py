@@ -7,47 +7,48 @@ import matplotlib.pyplot as pyplot
 """
 Constants for Graph generation
 """
-nodes : int = 10
-probability_of_edge : float = 0.4
+nodes : int = 120
+probability_of_edge : float = 0.04
 
-def generate_graphs(amount_of_graphs : int = 1) -> None:
+def generate_graphs(amount_of_graphs : int = 1, visualize : bool = False, dir : str = "") -> None:
     """
     Function which generates the graphs and stores them
     """
-    if not os.path.exists("data/"):
-        os.makedirs("data")
+    if not os.path.exists(f"data/{dir}"):
+        os.makedirs(f"data/{dir}")
 
-    if not os.path.exists("images/"):
-        os.makedirs("images")
+    if visualize and not os.path.exists(f"images/{dir}"):
+        os.makedirs(f"images/{dir}")
 
 
     for i in range(amount_of_graphs):
         graph : networkx.Graph = networkx.gnp_random_graph(nodes, probability_of_edge)
         graph.name = f"random_graph_{i + 1}"
 
-        with open(f"data/{graph.name}", "wb") as f:
+        with open(f"data/{dir}{graph.name}", "wb") as f:
             pickle.dump(graph, f)
 
         # colors for graph visualization
         node_color="#b6cef2"
         edge_color="#1b50a1"
 
-        # create directory for the graph
-        image_name = f"images/{graph.name}_initial.pdf"
+        if visualize:
+            # create directory for the graph
+            image_name = f"images/{dir}{graph.name}_initial.pdf"
 
-        pyplot.title("initial graph")
-        pos=networkx.spring_layout(graph, seed=1)
-        networkx.draw(graph,
-            pos,
-            node_size=160,
-            node_color=node_color,
-            edge_color=edge_color,
-            font_size=6,
-            width=1,
-            with_labels=True)
-        pyplot.tight_layout()
-        pyplot.savefig(image_name)
-        pyplot.close()
+            pyplot.title("initial graph")
+            pos=networkx.spring_layout(graph, seed=1)
+            networkx.draw(graph,
+                pos,
+                node_size=160,
+                node_color=node_color,
+                edge_color=edge_color,
+                font_size=6,
+                width=1,
+                with_labels=True)
+            pyplot.tight_layout()
+            pyplot.savefig(image_name)
+            pyplot.close()
 
 
 """
@@ -74,7 +75,7 @@ matched_nodes_colors = ["#34eb64",
                         "#eb34d6"]
 
 
-def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: str, matching_algorithm: str) -> None:
+def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: str, matching_algorithm: str, dir: str ) -> None:
     edge_colors = list()
     for edge in graph.edges:
         if edge in matching:
@@ -83,8 +84,8 @@ def visualize_matched_graph(graph: networkx.Graph, matching: Set, graph_name: st
             edge_colors.append(unmatched_edge_color)
 
         
-    graph_name = f"images/{graph_name}_{matching_algorithm}.pdf"
-    graph_title = f"Matching size: {len(matching)}\nAlgo step: {matching_algorithm}"
+    graph_name = f"images/{dir}{graph_name}_{matching_algorithm}.pdf"
+    graph_title = f"Matching size: {len(matching)}\nAlgorithm: {matching_algorithm}"
 
     pyplot.title(graph_title, fontsize=9)
     pos=networkx.spring_layout(graph, seed=1)
