@@ -1,9 +1,12 @@
 import math
+from xmlrpc.client import boolean
 
 class Snowplow:
-    def __init__(self, unsortedStreet):
+    def __init__(self, unsortedStreet: list):
+        zeroAppended = False
         if 0 not in unsortedStreet:
             unsortedStreet.append(0)
+            zeroAppended = True
         
         self.snowplow = 0
         self.route = []
@@ -15,13 +18,18 @@ class Snowplow:
         leftSublist.sort(reverse=True)
         rightSublist.remove(0)
         self.street.remove(0)
+        
+        if zeroAppended == False:
+            self.route.append(0)
+        else:
+            unsortedStreet.remove(0)
 
         streetLen = 0
         if leftSublist:
             streetLen += leftSublist[-1]*-1
         if rightSublist:
             streetLen += rightSublist[-1]
-        maxDistance = math.ceil(streetLen * 0.01)
+        maxDistance = streetLen * 0.01
         
         self.rightClusters = []
         self.rightPriority = []
@@ -35,9 +43,9 @@ class Snowplow:
             self.leftClusters = self.__clusterSides(leftSublist, maxDistance, True)
             self.leftPriority = sorted(self.leftClusters, key=len, reverse=True)
 
-        self.totalClusterNum = len(self.rightClusters) + len(self.rightClusters)
+        self.totalClusterNum = len(self.rightClusters) + len(self.leftClusters)
 
-    def __clusterSides(self, subList, maxDistance, left):
+    def __clusterSides(self, subList: list, maxDistance: float, left: bool) -> list:
         cluster = []
         for house in subList:
             if not cluster:
@@ -49,7 +57,7 @@ class Snowplow:
                 cluster.append([house])
         return cluster
     
-    def __turnRight(self):
+    def __turnRight(self) -> None:
         self.snowplow = self.rightPriority[0][-1]
         passedIndex = self.rightClusters.index(self.rightPriority[0])
         for x in range(0, passedIndex+1):
@@ -59,7 +67,7 @@ class Snowplow:
             del self.rightPriority[self.rightPriority.index(self.rightClusters[0])]
             del self.rightClusters[0]
 
-    def __turnLeft(self):
+    def __turnLeft(self) -> None:
         self.snowplow = self.leftPriority[0][-1]
         passedIndex = self.leftClusters.index(self.leftPriority[0])
         for x in range(0, passedIndex+1):
@@ -69,26 +77,43 @@ class Snowplow:
             del self.leftPriority[self.leftPriority.index(self.leftClusters[0])]
             del self.leftClusters[0]
     
-    def calculateDirection(self):
+    def calculateDirection(self) -> None:
+        distanceRight = self.rightPriority[0][0]
+        distanceLeft = self.leftPriority[0][0]*-1
 
-        # check which side has the nearest house (23 | 38)
+        if self.snowplow < 0:
+            distanceRight += self.snowplow * -1
+            distanceLeft -= self.snowplow * -1
+        if self.snowplow >= 0:
+            distanceRight -= self.snowplow
+            distanceLeft += self.snowplow
+        
+        # check distance to priority Block (21,36-21,43 | 46,8-48,7)
+        if distanceLeft < distanceRight:
+            self.__turnLeft()
+            return
+        elif distanceRight < distanceLeft:
+            self.__turnRight()
+            return
+        
+        # check for previous direction (21,3 | 44-47)
+        if self.snowplow < 0:
+            self.__turnLeft()
+            return
+        elif self.snowplow > 0:
+            self.__turnRight()
+            return    
+        
+        # check on which side the furthest house is closest (20,5 | 56,4)
         if self.street[0]*-1 < self.street[-1]:
             self.__turnLeft()
         elif self.street[-1] < self.street[0]*-1:
             self.__turnRight()
         else:
-            # check for previous direction (23,25 | 29)
-            if self.snowplow < 0:
-               self.__turnLeft()
-            elif self.snowplow > 0:
-                self.__turnRight()
-            else:
-                self.__turnRight()
-            
+            self.__turnRight()
 
-
-    def createRoute(self):
-        for index in range(0, self.totalClusterNum):
+    def createRoute(self) -> None:
+        for num in range(0, self.totalClusterNum):
             if not self.rightPriority and not self.leftPriority:
                 break
 
@@ -105,9 +130,7 @@ class Snowplow:
             elif not self.leftPriority:
                 self.__turnRight()
 
-def parcous(street):
+def parcous(street: list) -> list:
     programm = Snowplow(street)
     programm.createRoute()
     return programm.route
-
-# start env ".\..\tutorial-env\Scripts\activate.bat"
