@@ -70,45 +70,20 @@ class Snowplow:
             del self.leftClusters[0]
     
     def calculateDirection(self):
-        distanceRight = self.rightPriority[0][0]
-        distanceLeft = self.leftPriority[0][0]*-1
 
-        if self.snowplow < 0:
-            distanceRight += self.snowplow * -1
-            distanceLeft -= self.snowplow * -1
-        if self.snowplow >= 0:
-            distanceRight -= self.snowplow
-            distanceLeft += self.snowplow
-        
-        # 22
-        # check distance to priority Block
-        if distanceLeft < distanceRight:
+        # check which side has the nearest house (23 | 38)
+        if self.street[0]*-1 < self.street[-1]:
             self.__turnLeft()
-        elif distanceRight < distanceLeft:
+        elif self.street[-1] < self.street[0]*-1:
             self.__turnRight()
         else:
-
-            # check total size of blocks left on each side
-            if len(self.leftPriority) > len(self.rightPriority):
-                self.__turnLeft()
-            elif len(self.rightPriority) > len(self.leftPriority):
+            # check for previous direction (23,25 | 29)
+            if self.snowplow < 0:
+               self.__turnLeft()
+            elif self.snowplow > 0:
                 self.__turnRight()
             else:
-
-                # check which side has the nearest house
-                if self.street[0]*-1 < self.street[-1]:
-                    self.__turnLeft()
-                elif self.street[-1] < self.street[0]*-1:
-                    self.__turnRight()
-                else:
-
-                    # check for previous direction
-                    if self.snowplow < 0:
-                        self.__turnLeft()
-                    elif self.snowplow > 0:
-                        self.__turnRight()
-                    else:
-                        self.__turnRight()
+                self.__turnRight()
             
 
 
@@ -127,15 +102,12 @@ class Snowplow:
 
             elif not self.rightPriority:
                 self.__turnLeft()
-            elif self.leftPriority:
+            elif not self.leftPriority:
                 self.__turnRight()
-
-    def getRoute(self):
-        return self.route
 
 def parcous(street):
     programm = Snowplow(street)
     programm.createRoute()
-    return programm.getRoute()
+    return programm.route
 
 # start env ".\..\tutorial-env\Scripts\activate.bat"
