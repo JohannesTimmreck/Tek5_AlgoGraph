@@ -1,0 +1,10 @@
+=== Networkx ===
+==== Matching ====
+Average Matching = 51.4855
+Maximum Matching = 57, reached 1 amount of times.
+Minimum Matching = 45, reached 2 amount of times.
+
+==== Time ====
+average Time = 0.322099 ms
+Maximum Time = 0.952444 ms, reached 1 amount of times.
+Minimum Time = 0.240114 ms, reached 1 amount of times.
