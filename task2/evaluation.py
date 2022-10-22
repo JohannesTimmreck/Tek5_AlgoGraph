@@ -1,5 +1,4 @@
 from typing import Any
-from unicodedata import name
 from matplotlib import pyplot as plt
 
 from graph_helper_functions import generate_graphs
@@ -25,18 +24,18 @@ def evaluate(algo_name: str, results: list, name) -> Any:
         plot_time.append(sum_time/counter)
         counter += 1
 
-        with open(f"evaluation/{name}/{algo_name}.txt", "wb") as f:
-            f.writelines([
-                f"=== {algo_name} ===\n".encode('ascii'),
-                "==== Matching ====\n".encode('ascii'),
-                f"Average Matching = {sum_matching/len(results)}\n".encode('ascii'),
-                f"Maximum Matching = {max(matchings)}, reached {matchings.count(max(matchings))} amount of times.\n".encode('ascii'),
-                f"Minimum Matching = {min(matchings)}, reached {matchings.count(min(matchings))} amount of times.\n\n".encode('ascii'),
-                "==== Time ====\n".encode('ascii'),
-                f"average Time = {round(sum_time/len(results), 6)} ms\n".encode('ascii'),
-                f"Maximum Time = {max(times)} ms, reached {times.count(max(times))} amount of times.\n".encode('ascii'),
-                f"Minimum Time = {min(times)} ms, reached {times.count(min(times))} amount of times.\n".encode('ascii')]
-            )
+    with open(f"evaluation/{name}/{algo_name}.txt", "wb") as f:
+        f.writelines([
+            f"=== {algo_name} ===\n".encode('ascii'),
+            "==== Matching ====\n".encode('ascii'),
+            f"Average Matching = {sum_matching/len(results)}\n".encode('ascii'),
+            f"Maximum Matching = {max(matchings)}, reached {matchings.count(max(matchings))} amount of times.\n".encode('ascii'),
+            f"Minimum Matching = {min(matchings)}, reached {matchings.count(min(matchings))} amount of times.\n\n".encode('ascii'),
+            "==== Time ====\n".encode('ascii'),
+            f"average Time = {round(sum_time/len(results), 6)} ms\n".encode('ascii'),
+            f"Maximum Time = {max(times)} ms, reached {times.count(max(times))} amount of times.\n".encode('ascii'),
+            f"Minimum Time = {min(times)} ms, reached {times.count(min(times))} amount of times.\n".encode('ascii')]
+        )
 
     return plot_matching, plot_time
 
@@ -47,7 +46,9 @@ def main():
     results_sorted_greedy = list()
     results_multiple_sort = list()
 
+    print("Generating Graphs")
     generate_graphs(number_of_iterations, dir=f"{evaluation_name}/")
+    print("Starting Algorithims")
     for i in range(number_of_iterations):
         if i % 100 == 0:
             print(f"Start iteration {i}", flush=True)
@@ -59,6 +60,7 @@ def main():
     if not os.path.exists(f"evaluation/{evaluation_name}"):
         os.makedirs(f"evaluation/{evaluation_name}")
 
+    print("Starting Evaluation")
     networkx_plot_matching,networkx_plot_time  = evaluate("Networkx", results_networkx, evaluation_name)
     sorted_greedy_plot_matching,sorted_greedy_plot_time = evaluate("SortedGreedy", results_sorted_greedy, evaluation_name)
     multiple_sort_plot_matching,multiple_sort_plot_time = evaluate("MultipleSort", results_multiple_sort, evaluation_name)

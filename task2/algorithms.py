@@ -63,20 +63,17 @@ def multiple_sort_greedy_algorithm(graph : networkx.Graph, visualize : bool = Fa
 
     while len(unmatched_nodes) > 0:
         current_node = unmatched_nodes[0]
-        for neighbour in current_node["neighbours"]:
-            if not neighbour in matched_nodes:
-                matching.append((current_node["name"], neighbour))
-                matched_nodes.append(current_node["name"])
-                matched_nodes.append(neighbour)
-                unmatched_nodes.remove(current_node)
-                unmatched_nodes = [node for node in unmatched_nodes if node["name"] != neighbour]
-                for node in unmatched_nodes:
-                    node["neighbours"] = [neighbour_node for neighbour_node in node["neighbours"] if (neighbour_node != neighbour and neighbour_node != current_node["name"])]
-                unmatched_nodes = sorted(unmatched_nodes, key= lambda node : len(node["neighbours"]))
-                break
-        if current_node not in unmatched_nodes:
-            continue
-        unmatched_nodes.remove(current_node)
+        if len(current_node["neighbours"]) > 0:
+            neighbour = current_node["neighbours"][0]
+            matching.append((current_node["name"], neighbour))
+            matched_nodes.append(current_node["name"])
+            matched_nodes.append(neighbour)
+            unmatched_nodes.remove(current_node)
+            unmatched_nodes = [node for node in unmatched_nodes if node["name"] != neighbour]
+            for node in unmatched_nodes:
+                node["neighbours"] = [neighbour_node for neighbour_node in node["neighbours"] if (neighbour_node != neighbour and neighbour_node != current_node["name"])]
+        else:
+            unmatched_nodes.remove(current_node)
         unmatched_nodes = sorted(unmatched_nodes, key= lambda node : len(node["neighbours"]))
 
     matching_validation = test_matching(graph, matching)
