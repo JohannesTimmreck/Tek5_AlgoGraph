@@ -1,0 +1,10 @@
+=== MultipleSort ===
+==== Matching ====
+Average Matching = 59.0055
+Maximum Matching = 60, reached 445 amount of times.
+Minimum Matching = 56, reached 2 amount of times.
+
+==== Time ====
+average Time = 2.596983 ms
+Maximum Time = 7.915431 ms, reached 1 amount of times.
+Minimum Time = 2.143273 ms, reached 1 amount of times.

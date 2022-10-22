@@ -1,0 +1,10 @@
+=== SortedGreedy ===
+==== Matching ====
+Average Matching = 55.522
+Maximum Matching = 59, reached 8 amount of times.
+Minimum Matching = 51, reached 3 amount of times.
+
+==== Time ====
+average Time = 0.463941 ms
+Maximum Time = 1.711578 ms, reached 1 amount of times.
+Minimum Time = 0.388222 ms, reached 1 amount of times.
