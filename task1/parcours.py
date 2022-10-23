@@ -29,7 +29,7 @@ class Snowplow:
             streetLen += leftSublist[-1]*-1
         if rightSublist:
             streetLen += rightSublist[-1]
-        maxDistance = streetLen * 0.01
+        maxDistance = math.ceil(streetLen * 0.01)
         
         self.rightClusters = []
         self.rightPriority = []
@@ -45,7 +45,7 @@ class Snowplow:
 
         self.totalClusterNum = len(self.rightClusters) + len(self.leftClusters)
 
-    def __clusterSides(self, subList: list, maxDistance: float, left: bool) -> list:
+    def __clusterSides(self, subList: list, maxDistance: int, left: bool) -> list:
         cluster = []
         for house in subList:
             if not cluster:
@@ -88,7 +88,7 @@ class Snowplow:
             distanceRight -= self.snowplow
             distanceLeft += self.snowplow
         
-        # check distance to priority Block (21,36-21,43 | 46,8-48,7)
+        # check distance to priority Block
         if distanceLeft < distanceRight:
             self.__turnLeft()
             return
@@ -96,7 +96,7 @@ class Snowplow:
             self.__turnRight()
             return
         
-        # check for previous direction (21,3 | 44-47)
+        # check for previous direction
         if self.snowplow < 0:
             self.__turnLeft()
             return
@@ -104,7 +104,7 @@ class Snowplow:
             self.__turnRight()
             return    
         
-        # check on which side the furthest house is closest (20,5 | 56,4)
+        # check on which side the furthest house is closest
         if self.street[0]*-1 < self.street[-1]:
             self.__turnLeft()
         elif self.street[-1] < self.street[0]*-1:
@@ -130,7 +130,7 @@ class Snowplow:
             elif not self.leftPriority:
                 self.__turnRight()
 
-def parcous(street: list) -> list:
+def parcours(street: list) -> list:
     programm = Snowplow(street)
     programm.createRoute()
     return programm.route
